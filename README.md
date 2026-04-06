@@ -135,6 +135,28 @@ GPUS=8 ./slurm_test.sh PARTITION JOB_NAME configs/TrackOcc/trackocc_r50_704x256_
 CUDA_VISIBLE_DEVICES=0 python timing_trackocc.py configs/TrackOcc/trackocc_r50_704x256_3inst_3f_8gpu.py pretrain/trackocc_r50_704x256_3inst_3f_8gpu.pth
 ```
 
+### Visualization
+
+Run the following command to inference and save the results of validation set:
+```bash
+./dist_test.sh configs/TrackOcc/trackocc_r50_704x256_3inst_3f_8gpu.py pretrain/trackocc_r50_704x256_3inst_3f_8gpu.pth 8 --not-eval --format
+
+# Alternatively, you can use:
+# python inference.py
+# (only supports single-GPU inference)
+```
+--not-eval: Do not evaluate the model after inference (default: False).
+--format: Whether to format and save the inference results (default: False).
+
+After inference, run the visualization script to render the results:
+```bash
+python visual.py --vis_save_path ./test_results/vis --scene_idx 90
+```
+--scene_idx: Index of the scene in the validation set to visualize (0 - 201, default: 90).
+
+The visualization results, including both predictions and ground truth, will be saved in the ./test_results/vis directory.
+
+
 ## 🙏 Acknowledgement
 
 This project is not possible without multiple great open-sourced code bases. We list some notable examples below.

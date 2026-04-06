@@ -59,6 +59,7 @@ visual_dir
 settings
 run.sh
 
+test_results
 check_lidar
 work_dir
 work_dirs

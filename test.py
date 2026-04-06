@@ -41,6 +41,7 @@ def parse_args():
         description='MMDet test (and eval) a model')
     parser.add_argument('config', help='test config file path')
     parser.add_argument('checkpoint', help='checkpoint file')
+    parser.add_argument('--not-eval', action='store_true', help='Do not evaluate the model after inference')
     parser.add_argument('--out', help='output result file in pickle format')
     parser.add_argument(
         '--fuse-conv-bn',
@@ -65,7 +66,7 @@ def parse_args():
         help='Format the output results. It is'
         'useful when you want to format the result to a specific format and '
         'submit it to the test server')
-    parser.add_argument('--format-path', default='./test', help='the path of format results')
+    parser.add_argument('--format-path', default='./test_results', help='the path of format results')
     parser.add_argument(
         '--eval',
         type=str,
@@ -162,7 +163,8 @@ def main():
         torch.backends.cudnn.benchmark = True
     
     # each process may have different time
-    out_dir = osp.join(args.format_path, args.config.split('/')[-1][:-3], time.ctime().replace(' ','_').replace(':','_'))[:-8]
+    # out_dir = osp.join(args.format_path, args.config.split('/')[-1][:-3], time.ctime().replace(' ','_').replace(':','_'))[:-8]
+    out_dir = args.format_path
 
     if args.save:
         cfg.model.occupancy_save_path = out_dir
@@ -275,7 +277,7 @@ def main():
         kwargs['savefile_prefix'] = os.path.join(out_dir, 'occupancy_pred')
         if args.format:
             dataset.format_results(outputs, **kwargs)
-        if True:
+        if not args.not_eval: # args.not_eval (default: False
             eval_kwargs = cfg.get('evaluation', {}).copy()
             for key in [
                     'interval', 'tmpdir', 'start', 'gpu_collect', 'save_best',
